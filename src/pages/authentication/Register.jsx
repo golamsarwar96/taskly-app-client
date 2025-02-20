@@ -41,6 +41,7 @@ const Register = () => {
       await updateUserProfile(name, img_URL);
 
       toast.success("successfully signed up");
+      form.reset();
     } catch (err) {
       toast.error(err.message);
     }
