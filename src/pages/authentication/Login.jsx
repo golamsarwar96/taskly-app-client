@@ -1,8 +1,16 @@
 import { useContext } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
+import { useLocation, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import bgTaskly from "../../assets/images/bg-taskly.png";
 
 const Login = () => {
   const { userLogin } = useContext(AuthContext);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location?.state || "/";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -14,12 +22,28 @@ const Login = () => {
     try {
       const result = await userLogin(email, password);
       console.log(result);
-    } catch {
-      alert("Error");
+      navigate(from, { replace: true });
+      toast.success("Successfully Logged In");
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message);
     }
   };
+
   return (
-    <div className="flex justify-center items-center mt-40">
+    <div
+      className="flex flex-col gap-10 items-center h-screen max-h-[1000px] bg-cover "
+      style={{ backgroundImage: `url(${bgTaskly})` }}
+    >
+      <div className="text-center lg:mt-32 mt-10">
+        <h1 className="text-white text-5xl font-bold">
+          <span className="lg:*:text-accentColor">Welcome</span> To Task
+          <span className="lg:text-accentColor">ly</span>.
+        </h1>
+        <p className="text-white text-3xl font-bold mt-4 bg-primaryColor">
+          Login and add Tasks easily and efficiently
+        </p>
+      </div>
       <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
         <form onSubmit={handleSubmit} className="card-body">
           <div className="form-control">
@@ -52,7 +76,9 @@ const Login = () => {
             </label>
           </div>
           <div className="form-control mt-6">
-            <button className="btn btn-primary">Login</button>
+            <button className="bg-accentColor px-5 py-2 w-full font-bold text-white">
+              Login
+            </button>
           </div>
         </form>
       </div>

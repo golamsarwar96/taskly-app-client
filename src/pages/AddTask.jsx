@@ -1,7 +1,10 @@
 import axios from "axios";
+import { useContext } from "react";
 import toast from "react-hot-toast";
+import { AuthContext } from "../provider/AuthProvider";
 
 const AddTask = () => {
+  const { user } = useContext(AuthContext);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -14,6 +17,7 @@ const AddTask = () => {
       task: task,
       description: description,
       category: category,
+      user_email: user?.email,
     };
 
     //post req to db
