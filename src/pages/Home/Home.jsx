@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import TaskColumn from "./TaskColumn";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import bgTaskly from "../../assets/images/bg-taskly.png";
+import { AuthContext } from "../../provider/AuthProvider";
 
 const Home = () => {
   const [tasks, setTasks] = useState({ todo: [], inProgress: [], done: [] });
-
+  const { user } = useContext(AuthContext);
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -18,10 +19,15 @@ const Home = () => {
 
         const fetchedTasks = await response.json();
 
+        // Filter tasks based on the user's email
+        const userTasks = fetchedTasks.filter(
+          (task) => task?.user_email === user?.email
+        );
+
         // Ensure the categories are initialized properly
         const categorizedTasks = { todo: [], inProgress: [], done: [] };
 
-        fetchedTasks.forEach((task) => {
+        userTasks.forEach((task) => {
           const categoryKey = task.category?.toLowerCase();
           if (categorizedTasks[categoryKey]) {
             categorizedTasks[categoryKey].push(task);
@@ -37,24 +43,21 @@ const Home = () => {
     };
 
     fetchTasks();
-  }, []);
+  }, [user?.email]);
 
   const moveTask = (task, newColumn) => {
     setTasks((prevTasks) => {
-      // Create a deep copy of the tasks state to avoid direct mutation
       const newTasks = {
         todo: prevTasks.todo.filter((t) => t.id !== task.id),
         inProgress: prevTasks.inProgress.filter((t) => t.id !== task.id),
         done: prevTasks.done.filter((t) => t.id !== task.id),
       };
 
-      // Ensure the new column exists before adding the task
       if (!newTasks[newColumn]) {
         console.error(`Invalid column type: ${newColumn}`);
-        return prevTasks; // Keep the previous state unchanged
+        return prevTasks;
       }
 
-      // Add the task to the new column with an updated category
       newTasks[newColumn] = [
         ...newTasks[newColumn],
         { ...task, category: newColumn },
