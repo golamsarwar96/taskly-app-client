@@ -1,7 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useDrag } from "react-dnd";
+import { FiDelete } from "react-icons/fi";
 
 const TaskItem = ({ task }) => {
+  const handleDelete = () => {
+    console.log("Deleted");
+  };
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "task",
     item: { task },
@@ -18,6 +22,10 @@ const TaskItem = ({ task }) => {
     >
       <h3 className="font-bold">{task.task}</h3>
       <p>{task.description}</p>
+      <button onClick={handleDelete}>
+        {" "}
+        <FiDelete></FiDelete>
+      </button>
     </div>
   );
 };

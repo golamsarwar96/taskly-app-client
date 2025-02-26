@@ -2,10 +2,13 @@ import { useContext } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import bgTaskly from "../../assets/images/bg-taskly.png";
 
 const Register = () => {
   const { createUser, updateUserProfile, googleSignIn } =
     useContext(AuthContext);
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -42,6 +45,7 @@ const Register = () => {
 
       toast.success("successfully signed up");
       form.reset();
+      navigate("/");
     } catch (err) {
       toast.error(err.message);
     }
@@ -58,13 +62,17 @@ const Register = () => {
         email: result.user?.email?.email,
         image: result.user?.photoURL,
       });
+      navigate("/");
     } catch {
       console.log("ERROR");
     }
   };
 
   return (
-    <div className="flex justify-center items-center mt-40">
+    <div
+      className="flex justify-center items-center h-screen max-h-[1000px] bg-cover"
+      style={{ backgroundImage: `url(${bgTaskly})` }}
+    >
       <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
         <form onSubmit={handleSubmit} className="card-body">
           <div className="form-control">

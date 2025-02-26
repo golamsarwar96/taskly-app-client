@@ -3,9 +3,10 @@ import { AuthContext } from "../../provider/AuthProvider";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import bgTaskly from "../../assets/images/bg-taskly.png";
+import axios from "axios";
 
 const Login = () => {
-  const { userLogin } = useContext(AuthContext);
+  const { userLogin, googleSignIn } = useContext(AuthContext);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -30,6 +31,23 @@ const Login = () => {
     }
   };
 
+  //Google Sign In
+  const handleThirdPartySignIn = async () => {
+    try {
+      const result = await googleSignIn();
+      console.log(result);
+
+      await axios.post(`${import.meta.env.VITE_API_URL}/users`, {
+        name: result.user?.displayName,
+        email: result.user?.email?.email,
+        image: result.user?.photoURL,
+      });
+      toast.success("Successfully Logged In");
+      navigate("/");
+    } catch {
+      toast.error("ERROR");
+    }
+  };
   return (
     <div
       className="flex flex-col gap-10 items-center h-screen max-h-[1000px] bg-cover "
@@ -75,7 +93,13 @@ const Login = () => {
               </a>
             </label>
           </div>
-          <div className="form-control mt-6">
+          <div className="form-control mt-6 space-y-3">
+            <button
+              className="bg-accentColor px-5 py-2 w-full font-bold text-white"
+              onClick={handleThirdPartySignIn}
+            >
+              Sign in with Google
+            </button>
             <button className="bg-accentColor px-5 py-2 w-full font-bold text-white">
               Login
             </button>

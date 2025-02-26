@@ -1,6 +1,5 @@
 import { IoMdAddCircle } from "react-icons/io";
 import { IoHome } from "react-icons/io5";
-import { MdContactSupport } from "react-icons/md";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/images/logoTaskly.png";
 import { useContext } from "react";
@@ -31,17 +30,6 @@ const Navbar = () => {
       >
         <IoMdAddCircle className="text-lg" />
         Add Tasks
-      </NavLink>
-      <NavLink
-        className={({ isActive }) =>
-          isActive
-            ? "bg-accentColor px-4 py-2 md:rounded-3xl text-white flex items-center justify-center gap-1"
-            : "text-white flex items-center justify-center gap-1"
-        }
-        to="/contact"
-      >
-        <MdContactSupport className="text-lg" />
-        Contact Us
       </NavLink>
     </div>
   );
